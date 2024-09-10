@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-commerce Product Display</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Custom CSS -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #000;
+      }
+      .navbar {
+        background-color: #343a40;
+      }
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: bold;
+      }
+      .navbar-nav .nav-item .nav-link {
+        color: #ffffff !important;
+        margin-right: 15px;
+        font-weight: bold;
+      }
+      .navbar-nav .nav-item .nav-link:hover {
+        color: #d3d3d3 !important;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+      .modal-content {
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #ffffff;
+        color: #000;
+      }
+      .modal-header {
+        border-bottom: none;
+      }
+      .modal-body {
+        color: #000;
+      }
+      .search-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .search-bar {
+        display: inline-flex;
+        width: 80%;
+        max-width: 800px;
+      }
+      .search-bar input[type="text"] {
+        flex: 1;
+        border-radius: 8px 0 0 8px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+      }
+      .search-bar button {
+        border-radius: 0 8px 8px 0;
+        border: 1px solid #ced4da;
+        border-left: none;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        margin-left: 5px;
+      }
+      .search-bar button:hover {
+        background-color: #0056b3;
+      }
+      .title-container {
+        text-align: center;
+        margin-top: 30px;
+      }
+      .title-container h2 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      #product-cards {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 5 columns of equal width */
+        gap: 16px; /* Adjust the gap between items as needed */
+      }
+      .product-card {
+        width: 18rem;
+        margin: 10px;
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .product-card img {
+        width: 100%;
+        height: 180px;
+        object-fit: contain;
+      }
+      .product-card-body {
+        padding: 15px;
+        text-align: left;
+      }
+      .card-button-container {
+        text-align: center; /* Centers the button */
+        margin-top: 16px; /* Adjust spacing between text and button */
+      }
+      .product-card-body h5 {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .product-card-body p {
+        margin: 5px 0;
+      }
+
+      .product-card button {
+        margin-top: auto;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px;
+        cursor: pointer;
+        text-align: center;
+        width: 50%;
+        transition: background-color 0.3s ease;
+      }
+
+      .product-card button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="main.html"
+        >Ecommerce Recommendation System</a
+      >
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="main.html" id="homeLink">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Trending</a>
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              id="settingsLink"
+              data-toggle="modal"
+              data-target="#settingsModal"
+              >Settings</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="btn btn-primary"
+              href="#"
+              data-toggle="modal"
+              data-target="#signupModal"
+              >Sign Up</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="btn btn-primary ml-2"
+              href="#"
+              data-toggle="modal"
+              data-target="#signinModal"
+              >Sign In</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Search Bar -->
+    <div class="search-container">
+      <div class="search-bar">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search for products..."
+        />
+        <button type="button" id="searchButton">Search</button>
+      </div>
+    </div>
+
+    <!-- Recommended Products Title -->
+    <div class="title-container">
+      <h2>Recommended Products</h2>
+    </div>
+
+    <!-- Product Cards -->
+    <div id="product-cards" class="d-flex flex-wrap justify-content-center">
+      <!-- Cards will be dynamically inserted here -->
+    </div>
+
+    <!--Settings modal -->
+
+    <div
+      class="modal fade"
+      id="settingsModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="settingsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h5>Choose Theme:</h5>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="theme"
+                id="defaultTheme"
+                value="default"
+                checked
+              />
+              <label class="form-check-label" for="defaultTheme">Default</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="theme"
+                id="blueTheme"
+                value="blue"
+              />
+              <label class="form-check-label" for="blueTheme">Blue Theme</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="theme"
+                id="greenTheme"
+                value="green"
+              />
+              <label class="form-check-label" for="greenTheme"
+                >Green Theme</label
+              >
+            </div>
+            <hr />
+            <h5>Zoom:</h5>
+            <button type="button" class="btn btn-primary mr-2" id="zoomIn">
+              Zoom In
+            </button>
+            <button type="button" class="btn btn-primary" id="zoomOut">
+              Zoom Out
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="applyTheme">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Sign Up Modal -->
+    <div
+      class="modal fade"
+      id="signupModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="signupModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="signupEmail">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="signupEmail"
+                  placeholder="Enter email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signupPassword">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="signupPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signupConfirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="signupConfirmPassword"
+                  placeholder="Confirm Password"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign In Modal -->
+    <div
+      class="modal fade"
+      id="signinModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="signinModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signinModalLabel">Sign In</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="signinEmail">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="signinEmail"
+                  placeholder="Enter email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signinPassword">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="signinPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script>
+      let allProducts = []; // Array to store all products
+
+      async function fetchProductData() {
+        try {
+          const response = await fetch("../models/clean_data.csv"); // Adjust the path as needed
+          const text = await response.text();
+          const data = Papa.parse(text, { header: true }).data;
+
+          allProducts = data;
+          console.log("Fetched Products:", allProducts); // Debugging line
+          displayProducts(allProducts); // Display all products initially
+        } catch (error) {
+          console.error("Error fetching product data:", error);
+        }
+      }
+
+      function displayProducts(products) {
+        const productCards = document.getElementById("product-cards");
+        productCards.innerHTML = "";
+
+        // Display products
+        for (let i = 0; i < Math.min(products.length, 20); i++) {
+          const product = products[i];
+
+          const card = document.createElement("div");
+          card.className = "card product-card";
+          card.innerHTML = `
+      <img src="${product.ImageURL}" class="card-img-top" alt="${
+            product.Name
+          }" />
+      <div class="card-body product-card-body">
+        <h5 class="card-title">${truncateName(product.Name, 20)}</h5>
+        <p class="card-text">Brand: ${product.Brand}</p>
+        <p class="card-text">Rating: ${product.Rating}</p>
+        <p class="card-text">Reviews: ${product.ReviewCount}</p>
+         <div class="card-button-container">
+    <button class="btn btn-primary">Buy Now</button>
+  </div>
+      </div>
+    `;
+          productCards.appendChild(card);
+        }
+      }
+
+      function truncateName(name, maxLength) {
+        if (name.length > maxLength) {
+          return name.slice(0, maxLength) + "..."; // Truncate and add ellipsis
+        }
+        return name;
+      }
+
+      document
+        .getElementById("searchButton")
+        .addEventListener("click", function () {
+          const searchQuery = document
+            .getElementById("searchInput")
+            .value.toLowerCase();
+          console.log("Search Query:", searchQuery); // Debugging line
+
+          // Check if products have been fetched
+          if (allProducts.length === 0) {
+            console.log("No products available to search.");
+            return;
+          }
+
+          const filteredProducts = allProducts.filter(
+            (product) =>
+              product.Name && product.Name.toLowerCase().includes(searchQuery)
+          );
+
+          console.log("Filtered Products:", filteredProducts); // Debugging line
+          displayProducts(filteredProducts);
+        });
+
+      // Search on Enter key press
+      document
+        .getElementById("searchInput")
+        .addEventListener("keypress", function (event) {
+          if (event.key === "Enter") {
+            document.getElementById("searchButton").click();
+          }
+        });
+
+      // Settings modal functionality
+      document
+        .getElementById("applyTheme")
+        .addEventListener("click", function () {
+          const theme = document.querySelector(
+            'input[name="theme"]:checked'
+          ).value;
+          console.log("Selected Theme:", theme); // Debugging line
+
+          // Apply theme changes
+          switch (theme) {
+            case "default":
+              document.body.style.backgroundColor = "#f8f9fa";
+              document.body.style.color = "#000";
+              break;
+            case "blue":
+              document.body.style.backgroundColor = "#b3e5fc";
+              document.body.style.color = "#0288d1";
+              break;
+
+            case "green":
+              document.body.style.backgroundColor = "#d4edda";
+              document.body.style.color = "#155724";
+              break;
+          }
+        });
+
+      document.getElementById("zoomIn").addEventListener("click", function () {
+        document.body.style.zoom = "120%";
+      });
+
+      document.getElementById("zoomOut").addEventListener("click", function () {
+        document.body.style.zoom = "100%";
+      });
+
+      fetchProductData();
+    </script>
+
+    <!--footer-->
+    <footer class="footer bg-dark text-white" style="margin-top: 300px">
+      <div class="container" style="padding-top: 20px">
+        <div class="row">
+          <div class="col-md-3 col-sm-6">
+            <h5>About Us</h5>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              pretium risus quis urna maximus, eget vestibulum risus vestibulum.
+            </p>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <h5>Support</h5>
+            <ul class="list-unstyled">
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <h5>Contact Us</h5>
+            <address>
+              <strong>Company Name</strong><br />
+              123 Street, City<br />
+              Country<br />
+              <i class="fas fa-phone"></i> Phone: +1234567890<br />
+              <i class="fas fa-envelope"></i> Email: info@example.com
+            </address>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <hr class="bg-light" />
+            <p class="text-center">
+              © 2024 Ecommerce Recommendation System. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

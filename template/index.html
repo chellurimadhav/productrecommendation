@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-commerce Product Display</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Custom CSS -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #000;
+      }
+      .navbar {
+        background-color: #343a40;
+      }
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: bold;
+      }
+      .navbar-nav .nav-item .nav-link {
+        color: #ffffff !important;
+        margin-right: 15px;
+        font-weight: bold;
+      }
+      .navbar-nav .nav-item .nav-link:hover {
+        color: #d3d3d3 !important;
+      }
+      .btn-primary {
+        background-color: #007bff;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+      .video-section {
+        position: relative;
+        height: 40vh; /* Adjust based on your requirement */
+        overflow: hidden;
+      }
+      .video-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .title-container {
+        text-align: center;
+        margin-top: 4rem;
+      }
+      .title-container h2 {
+        font-size: 40px;
+        font-weight: bold;
+        color: #333;
+      }
+      .product-card {
+        width: 100%;
+        margin: 10px;
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .product-card img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: contain;
+      }
+      .product-card-body {
+        padding: 15px;
+        text-align: left; /* Align text to the left */
+      }
+      .product-card .card-title {
+        font-weight: bold; /* Make product name bold */
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .card-text {
+        margin: 0; /* Remove default margin from card-text */
+      }
+      /* Adjust column spacing and width */
+      .container {
+        padding: 0 15px;
+      }
+      .row {
+        margin-left: -15px;
+        margin-right: -15px;
+      }
+      .col-md-4 {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      .card-button-container {
+        text-align: center; /* Centers the button */
+        margin-top: 16px; /* Adjust spacing between text and button */
+      }
+      .product-card button {
+        margin-top: auto;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px;
+        cursor: pointer;
+        text-align: center;
+        width: 50%;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      .product-card button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="main.html"
+        >Ecommerce Recommendation System</a
+      >
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="main.html" id="homeLink">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Trending</a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              id="settingsLink"
+              data-toggle="modal"
+              data-target="#settingsModal"
+              >Settings</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="btn btn-primary"
+              href="#"
+              data-toggle="modal"
+              data-target="#signupModal"
+              >Sign Up</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="btn btn-primary ml-2"
+              href="#"
+              data-toggle="modal"
+              data-target="#signinModal"
+              >Sign In</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Video Section -->
+    <div class="video-section">
+      <video class="video-background" autoplay loop muted>
+        <source src="/static/v.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="title-container">
+      <h2>Trending Products</h2>
+    </div>
+
+    <!-- Trending Products Section -->
+    <div class="container">
+      <div class="row" id="trending-products"></div>
+    </div>
+    <!--Settings modal -->
+
+    <div
+      class="modal fade"
+      id="settingsModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="settingsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingsModalLabel">Settings</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h5>Choose Theme:</h5>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="theme"
+                id="defaultTheme"
+                value="default"
+                checked
+              />
+              <label class="form-check-label" for="defaultTheme">Default</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="theme"
+                id="blueTheme"
+                value="blue"
+              />
+              <label class="form-check-label" for="blueTheme">Blue Theme</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="theme"
+                id="greenTheme"
+                value="green"
+              />
+              <label class="form-check-label" for="greenTheme"
+                >Green Theme</label
+              >
+            </div>
+            <hr />
+            <h5>Zoom:</h5>
+            <button type="button" class="btn btn-primary mr-2" id="zoomIn">
+              Zoom In
+            </button>
+            <button type="button" class="btn btn-primary" id="zoomOut">
+              Zoom Out
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="applyTheme">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Sign Up Modal -->
+    <div
+      class="modal fade"
+      id="signupModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="signupModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signupModalLabel">Sign Up</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="signupEmail">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="signupEmail"
+                  placeholder="Enter email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signupPassword">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="signupPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signupConfirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="signupConfirmPassword"
+                  placeholder="Confirm Password"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sign In Modal -->
+    <div
+      class="modal fade"
+      id="signinModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="signinModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signinModalLabel">Sign In</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="signinEmail">Email address</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="signinEmail"
+                  placeholder="Enter email"
+                />
+              </div>
+              <div class="form-group">
+                <label for="signinPassword">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="signinPassword"
+                  placeholder="Password"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+
+    <script>
+      // Function to fetch and display trending products
+      function loadTrendingProducts() {
+        Papa.parse("/models/trending_products.csv", {
+          header: true,
+          download: true,
+          complete: function (results) {
+            const products = results.data;
+            const container = document.getElementById("trending-products");
+
+            products.forEach((product) => {
+              if (product.sno) {
+                // Only display products with a valid sno
+                const productHtml = `
+                <div class="col-md-4">
+                  <div class="card product-card">
+                    <img src="${product.ImageURL}" class="card-img-top" alt="${
+                  product.Name
+                }" />
+                    <div class="card-body">
+                      <h5 class="card-title">${
+                        product.Name.length > 20
+                          ? product.Name.substring(0, 20) + "..."
+                          : product.Name
+                      }</h5>
+                      <p class="card-text">Brand: ${product.Brand}</p>
+                      <p class="card-text">Rating: ${product.Rating}</p>
+                      <p class="card-text">Reviews: ${product.ReviewCount}</p>
+                       <div class="card-button-container">
+    <button class="btn btn-primary">Buy Now</button>
+  </div>
+      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+                container.innerHTML += productHtml;
+              }
+            });
+          },
+        });
+      }
+
+      // Load trending products on page load
+      document.addEventListener("DOMContentLoaded", loadTrendingProducts);
+
+      // Settings modal functionality
+      document
+        .getElementById("applyTheme")
+        .addEventListener("click", function () {
+          const theme = document.querySelector(
+            'input[name="theme"]:checked'
+          ).value;
+          console.log("Selected Theme:", theme); // Debugging line
+
+          // Apply theme changes
+          switch (theme) {
+            case "default":
+              document.body.style.backgroundColor = "#f8f9fa";
+              document.body.style.color = "#000";
+              break;
+            case "blue":
+              document.body.style.backgroundColor = "#b3e5fc"; // Light blue background
+              document.body.style.color = "#0288d1"; // Darker blue text
+              break;
+
+            case "green":
+              document.body.style.backgroundColor = "#d4edda";
+              document.body.style.color = "#155724";
+              break;
+          }
+        });
+
+      document.getElementById("zoomIn").addEventListener("click", function () {
+        document.body.style.zoom = "120%";
+      });
+
+      document.getElementById("zoomOut").addEventListener("click", function () {
+        document.body.style.zoom = "100%";
+      });
+
+      fetchProductData();
+    </script>
+    <!--footer-->
+    <footer class="footer bg-dark text-white" style="margin-top: 300px">
+      <div class="container" style="padding-top: 20px">
+        <div class="row">
+          <div class="col-md-3 col-sm-6">
+            <h5>About Us</h5>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+              pretium risus quis urna maximus, eget vestibulum risus vestibulum.
+            </p>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <h5>Support</h5>
+            <ul class="list-unstyled">
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 col-sm-6">
+            <h5>Contact Us</h5>
+            <address>
+              <strong>Company Name</strong><br />
+              123 Street, City<br />
+              Country<br />
+              <i class="fas fa-phone"></i> Phone: +1234567890<br />
+              <i class="fas fa-envelope"></i> Email: info@example.com
+            </address>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <hr class="bg-light" />
+            <p class="text-center">
+              © 2024 Ecommerce Recommendation System. All Rights Reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
